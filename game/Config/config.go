@@ -3,8 +3,6 @@ package config
 import (
 	"os"
 	"strconv"
-
-	"github.com/joho/godotenv"
 )
 
 type GameConfig struct {
@@ -14,16 +12,13 @@ type GameConfig struct {
 }
 
 func SetUpGameConfig() (*GameConfig, error) {
-	err := godotenv.Load()
-	if err != nil {
-		return nil, err
-	}
 
 	game := GameConfig{}
 
 	game.ApiURL = os.Getenv("API_URL")
 	game.StudentID = os.Getenv("STUDENT_ID")
 
+	var err error
 	game.BoardSize, err = strconv.Atoi(os.Getenv("BOARD_SIZE"))
 	if err != nil {
 		return nil, err
