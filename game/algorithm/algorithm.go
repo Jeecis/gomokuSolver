@@ -12,8 +12,6 @@ func CalculateMove(board [][]int, color int, move int, timeRemaining float32) (s
 
 	var depth int
 	if timeRemaining == -1 || timeRemaining > 200 {
-		depth = 5
-	} else if timeRemaining > 150 {
 		depth = 4
 	} else if timeRemaining > 100 {
 		depth = 3
