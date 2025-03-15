@@ -17,7 +17,7 @@ cd ..
 ```
 ### Usage
 
-```gomoku -url "37.27.208.205:55555" -id "231RDB342" -gm "api"```
+```./gomoku -url "http://37.27.208.205:55555" -id "231RDB342" -gm "api"```
 Command Line Flags
 * `-gm`: Game mode (required)
     * `api`: Headless mode for server deployment
