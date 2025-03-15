@@ -24,9 +24,46 @@ type Game struct {
 	boardMutex sync.RWMutex
 }
 
-// Update the game state
+// UserMoveChannel is used to communicate user clicks to the game logic
+var UserMoveChannel = make(chan [2]int)
+
+// waitingForMove indicates if the game is expecting a move from the user
+var waitingForMove bool
+
 func (g *Game) Update() error {
+	if waitingForMove && ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
+		// Get the mouse position
+		x, y := ebiten.CursorPosition()
+
+		// Convert to board coordinates
+		boardX := x / cellSize
+		boardY := y / cellSize
+
+		// Check if the click is within board bounds
+		if boardX >= 0 && boardX < boardSize && boardY >= 0 && boardY < boardSize {
+			// Check if the cell is empty
+			g.boardMutex.RLock()
+			isEmpty := g.board[boardY][boardX] == 0
+			g.boardMutex.RUnlock()
+
+			if isEmpty {
+				// Send the move through the channel
+				select {
+				case UserMoveChannel <- [2]int{boardY, boardX}:
+					waitingForMove = false
+				default:
+					// Channel is not ready, will try on next update
+				}
+			}
+		}
+	}
 	return nil
+}
+
+func WaitForUserMove() (row, col int) {
+	waitingForMove = true
+	move := <-UserMoveChannel
+	return move[0], move[1]
 }
 
 // Draw draws the game screen

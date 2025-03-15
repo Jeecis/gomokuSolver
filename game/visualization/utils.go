@@ -53,3 +53,12 @@ func PrintGameBoard(board [][]int) {
 	}
 	fmt.Println("+++++++++++++++++++++++++++++++")
 }
+
+func CleanBoard(board [][]int) [][]int {
+	for i := 0; i < len(board); i++ {
+		for j := 0; j < len(board[i]); j++ {
+			board[i][j] = 0
+		}
+	}
+	return board
+}

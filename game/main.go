@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	go apiLogic()
+	go playerVsAILogicHumanStart()
 	visualization.StartGameLoop()
 }
 
@@ -71,8 +71,6 @@ func apiLogic() {
 				break
 			}
 			move += 1
-
-			x, y = algorithm.CalculateMove(board, 1, move)
 		}
 		if currentStatus == "LEAVE" {
 			break
@@ -100,7 +98,7 @@ func playerVsAILogicBotStart() {
 		move += 1
 		for {
 
-			xInt, yInt = visualization.ReadInput()
+			yInt, xInt = visualization.WaitForUserMove()
 			board = visualization.UpdateGameBoard(board, xInt, yInt, 2)
 			visualization.VisualizeGame(board)
 			move += 1
@@ -108,6 +106,9 @@ func playerVsAILogicBotStart() {
 			res := algorithm.VerifyVictory(board, 2, move)
 			if res {
 				fmt.Println("White wins")
+				_, _ = visualization.WaitForUserMove()
+				board = visualization.CleanBoard(board)
+				visualization.VisualizeGame(board)
 				break
 			}
 
@@ -121,6 +122,9 @@ func playerVsAILogicBotStart() {
 			res = algorithm.VerifyVictory(board, 1, move)
 			if res {
 				fmt.Println("Black wins")
+				_, _ = visualization.WaitForUserMove()
+				board = visualization.CleanBoard(board)
+				visualization.VisualizeGame(board)
 				break
 			}
 		}
@@ -140,11 +144,10 @@ func playerVsAILogicHumanStart() {
 			board[i] = make([]int, 16)
 		}
 
-		xInt, yInt := visualization.ReadInput()
+		yInt, xInt := visualization.WaitForUserMove()
 		board = visualization.UpdateGameBoard(board, xInt, yInt, 1)
-		visualization.PrintGameBoard(board)
+		visualization.VisualizeGame(board)
 		move += 1
-		log.Print("=====================================")
 
 		for {
 
@@ -152,26 +155,29 @@ func playerVsAILogicHumanStart() {
 			xInt, _ = strconv.Atoi(x)
 			yInt, _ = strconv.Atoi(y)
 			board = visualization.UpdateGameBoard(board, xInt, yInt, 2)
-			// visualization.VisualizeGame(board)
-			visualization.PrintGameBoard(board)
+			visualization.VisualizeGame(board)
 			move += 1
-			log.Print("=====================================")
 
 			res := algorithm.VerifyVictory(board, 2, move)
 			if res {
 				fmt.Println("White wins")
+				_, _ = visualization.WaitForUserMove()
+				board = visualization.CleanBoard(board)
+				visualization.VisualizeGame(board)
 				break
 			}
 
-			xInt, yInt = visualization.ReadInput()
+			yInt, xInt := visualization.WaitForUserMove()
 			board = visualization.UpdateGameBoard(board, xInt, yInt, 1)
-			visualization.PrintGameBoard(board)
+			visualization.VisualizeGame(board)
 			move += 1
-			log.Print("=====================================")
 
 			res = algorithm.VerifyVictory(board, 1, move)
 			if res {
 				fmt.Println("Black wins")
+				_, _ = visualization.WaitForUserMove()
+				board = visualization.CleanBoard(board)
+				visualization.VisualizeGame(board)
 				break
 			}
 		}
