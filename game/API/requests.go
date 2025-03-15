@@ -16,7 +16,7 @@ type GameStartResponse struct {
 	Color         string  `json:"color"`
 	GameBoard     [][]int `json:"gameboard"`
 	RequestStatus string  `json:"request_status"`
-	TimeRemaining int     `json:"time_remaining"`
+	TimeRemaining float32 `json:"time_remaining"`
 	Turn          string  `json:"turn"`
 
 	// Add other fields as per your API response
@@ -85,8 +85,6 @@ func MoveRequest(cfg *config.GameConfig, gameID string, x string, y string) (*Mo
 		return nil, err
 	}
 
-	log.Print(string(body))
-
 	var moveResponse MoveResponse
 	err = json.Unmarshal(body, &moveResponse)
 	if err != nil {
@@ -96,6 +94,8 @@ func MoveRequest(cfg *config.GameConfig, gameID string, x string, y string) (*Mo
 	if moveResponse.RequestStatus != "GOOD" {
 		return nil, errors.New("Bad request status " + moveResponse.RequestStatus)
 	}
+
+	log.Print(string(body))
 
 	return &moveResponse, nil
 

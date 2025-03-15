@@ -4,14 +4,23 @@ import (
 	"strconv"
 )
 
-func CalculateMove(board [][]int, color int, move int) (string, string) {
+func CalculateMove(board [][]int, color int, move int, timeRemaining float32) (string, string) {
 
 	if move < 5 {
 		return openingMove(board, move)
 	}
 
-	if move < 7 {
-		return dbSearch(board, color)
+	var depth int
+	if timeRemaining == -1 || timeRemaining > 200 {
+		depth = 5
+	} else if timeRemaining > 150 {
+		depth = 4
+	} else if timeRemaining > 100 {
+		depth = 3
+	} else if timeRemaining > 50 {
+		depth = 2
+	} else {
+		depth = 1
 	}
 
 	var winningPattern []Pattern
@@ -47,7 +56,7 @@ func CalculateMove(board [][]int, color int, move int) (string, string) {
 	}
 
 	// No winning patterns found, generate candidate moves
-	return dbSearch(board, color)
+	return dbSearch(board, color, depth)
 }
 
 // Make move towards center of the board but next to the opponents piece

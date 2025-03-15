@@ -16,15 +16,12 @@ func CleanVisitedCandidates() {
 	visitedCandidates = make(map[candidateMove]bool)
 }
 
-func dbSearch(board [][]int, color int) (string, string) {
+func dbSearch(board [][]int, color int, depth int) (string, string) {
 	blackList := [][]Pattern{threatPatternsBlack, openThreeThreatsBlack, nonThreatPatternsBlack}
 	whiteList := [][]Pattern{threatPatternsWhite, openThreeThreatsWhite, nonThreatPatternsWhite}
 
 	// Get opponent color
 	opponent := 3 - color // If color is 1, opponent is 2 and vice versa
-
-	// Set search depth (adjust as needed for performance)
-	depth := 3
 
 	// Get pattern lists based on player color
 	var playerPatterns, opponentPatterns [][]Pattern
